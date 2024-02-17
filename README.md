@@ -1,6 +1,10 @@
 # [ASM learning](https://github.com/pluttan/asmlearning)
 Репозиторий с лабораторными и примерами к [лекциям](https://www.youtube.com/playlist?list=PL2EF13wm-hWCoj6tUBGUmrkJmH1972dBB) по ассемблеру.
 
+## Лабораторные работы
+
+01. [Отчет по лабораторной работе 1](https://github.com/pluttan/asmlearning/blob/master/lab1/lab1.pdf)
+
 ## Примеры
 Примеры сделаны на основе лекций OliveStem. Вот список всего, что есть.
 
