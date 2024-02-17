@@ -3,6 +3,9 @@ section .data
     b dd 0x2500
 
 section .text
+global _start
+
+_start:
     mov bl, [a]
     mov ch, [a]
 
