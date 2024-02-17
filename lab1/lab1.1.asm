@@ -1,4 +1,4 @@
-section .data                               ; сегмент инициализированных переменных
+section .data                                ; сегмент инициализированных переменных
     ExitMsg db  "Press Enter to Exit",10     ; выводимое сообщение
     lenExit equ $-ExitMsg
 
