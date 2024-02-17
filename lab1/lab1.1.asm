@@ -1,9 +1,10 @@
-section .data                                ; сегмент инициализированных переменных
-    ExitMsg db  "Press Enter to Exit",10     ; выводимое сообщение
+section .data           ; сегмент инициализированных переменных
+    ; выводимое сообщение
+    ExitMsg db  "Press Enter to Exit",10    
     lenExit equ $-ExitMsg
 
-section .bss                                ; сегмент неинициализированных переменных
-    InBuf resb 10                           ; буфер для вводимой строки
+section .bss            ; сегмент неинициализированных переменных
+    InBuf resb 10       ; буфер для вводимой строки
     lenIn equ  $-InBuf 
 
 
