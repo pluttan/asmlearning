@@ -3,9 +3,10 @@ extern outi
 
 section .data
     ia db  "Enter a: "
-    ic db  "Enter b: "
-    ik db  "Enter c: "
-    inl equ $-ik
+    ic db  "Enter c: "
+    ik db  "Enter k: "
+    ot db  "Result : "
+    inl equ $-ot
 
 section .bss
     a resb 12
@@ -63,7 +64,7 @@ _start:
     pop eax
     pop ebx
     mul ebx
-    mov edx, 0
+    cdq 
     div ecx
 
     pop ecx
@@ -72,7 +73,7 @@ _start:
     mov dword[a], eax 
 
     mov eax, a
-    mov ecx, ia
+    mov ecx, ot
     mov edx, inl
     call outi
 

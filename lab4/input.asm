@@ -1,6 +1,8 @@
+global getmas
 global geti
 global stoi
 global ctoi
+
 
 ; Процедура, приглашающая пользователя на ввод, получающая строку на входе и приобразовывающая ее в число
 ; In:
@@ -44,6 +46,82 @@ geti:
 
     ret
 
+
+; Процедура, приглашающая пользователя на ввод, получающая строку на входе и приобразовывающая ее в массив чисел
+; In:
+;   eax -- количество букв в предложении
+;   ebx -- ссылка на первую букву приглашения      
+;   ecx -- ссылка на массив
+;   edx -- ссылка на память, выделенную под ввод
+;   esi -- количество чисел
+; Out:
+;   В памяти под ввод число, которое ввел пользователь
+
+getmas:
+    push esi
+    push edi
+    push eax
+    push ebx
+    push ecx
+    push edx
+    
+    mov ecx, ebx
+    mov edx, eax
+    mov eax, 4      ; Пишем приглашение на ввод
+    mov ebx, 1
+    int 80h
+
+    mov  eax, 3      ; Читаем ввод
+    mov  ebx, 0
+    pop  ecx
+    pop  edx
+    push ecx
+    push edx
+    mov  edx, 255 
+    int  80h
+
+    mov  edx, ecx
+    pop  ecx
+    push ecx
+
+    mov  edi, esi
+    mov  eax, edi
+    mov  edi, 4
+    push edx
+    mul  edi
+    pop  edx
+    mov  edi, eax
+    mov  eax, 0
+
+    add  ecx, edi
+    mov  ebx, 0
+
+
+getmasl:
+    call stoi
+    sub  ecx, edi
+    mov  dword[ecx], eax
+    add  ecx, edi
+    mov  edx, esi
+    
+    sub  edi, 4 
+    cmp  edi, 0
+    jne  getmasl
+    jmp  getmase
+
+
+getmase:
+    pop ecx
+    pop edx
+    pop ebx
+    pop eax
+    pop edi
+    pop esi
+
+    ret
+
+
+
 ; Процедура, преобразующая  символ в цифру
 ; in:
 ;   dl -- символ
@@ -63,12 +141,11 @@ ctoie:
     ret
 
 ; Процедура, преобразующая массив символов в число ; in:
-;   dx -- адрес первого символа
-;   cx -- количество символов
+;   edx -- адрес первого символа
 ; out:
-;   ax -- число
+;   eax -- число
+;   esi -- адрес выхода
 stoi:
-    push esi
     push edx
     push ebx
     push ecx
@@ -96,6 +173,8 @@ stoil:
 
     cmp dl, 0x0a ; =LF
     je  stoie
+    cmp dl, ' ' 
+    je  stoie
 
     call ctoi
 
@@ -106,10 +185,6 @@ stoil:
     add  eax, edx
 
     jmp stoil
-    
-    sub cx, 1
-    cmp cx, 0
-    je stoie
 
 stoie:
     mov ecx, 0
@@ -126,7 +201,6 @@ stoiend:
     pop ecx
     pop ebx
     pop edx
-    pop esi
 
     ret
  
