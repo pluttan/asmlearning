@@ -33,8 +33,7 @@ outi:
     pop ebx
 
     ret
-
-
+;
 ; Процедура, преобразующая число в массив символов
 ; in:
 ;   ebx -- адрес числа, первого символа
@@ -57,7 +56,7 @@ itos:
     jl  itosminus
 
     jmp  itosl
-
+;
 itosminus:
     mov  byte[esi], '-'
     
@@ -67,20 +66,20 @@ itosminus:
     mul  ecx
 
     jmp  itosl
-
+;
 itosl:
     mov edx, 0
     div ebx
     add edx, '0'
     mov byte[esi], dl
 
-    cmp eax, 0
-    je  itose
-    
     inc esi
 
-    jmp itosl
+    cmp eax, 0
+    je  itose
 
+    jmp itosl
+;
 itose:
     pop edx
     pop ecx
@@ -90,7 +89,6 @@ itose:
 
     mov ecx, esi
     sub ecx, ebx
-    add ecx, 1
 
     call reverse    
 
@@ -98,8 +96,7 @@ itose:
     pop esi 
 
     ret
-
-
+;
 ; Процедура перемещает цифры меджу друг другом
 ; in:
 ;   eax -- число
@@ -122,12 +119,11 @@ reverse:
     je reverseminus
 
     jmp reversel
-
-
+; 
 reverseminus:
     inc ebx
     jmp reversel
-
+;
 reversel:
     cmp ebx, edx
     jge reversee
@@ -141,23 +137,11 @@ reversel:
     sub edx, 1
 
     jmp reversel
-
+;
 reversee:
     pop edx
     pop ecx
     pop ebx
     pop eax
     ret
-
-
-
-
-
-
-
-
-
-
-
-    
-
+;

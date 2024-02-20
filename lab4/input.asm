@@ -196,6 +196,7 @@ stoie:
 stoiaddm:
     mov ecx, -1
     mul ecx
+    jmp stoiend
 
 stoiend:
     pop ecx

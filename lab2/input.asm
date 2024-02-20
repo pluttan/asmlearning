@@ -1,7 +1,6 @@
 global geti
 global stoi
 global ctoi
-
 ; Процедура, приглашающая пользователя на ввод, получающая строку на входе и приобразовывающая ее в число
 ; In:
 ;   eax -- количество букв в предложении
@@ -43,7 +42,7 @@ geti:
     pop eax
 
     ret
-
+;
 ; Процедура, преобразующая  символ в цифру
 ; in:
 ;   dl -- символ
@@ -58,10 +57,10 @@ ctoi:
 
     sub dl, '0'
     jmp ctoie
-
+;
 ctoie:
     ret
-
+;
 ; Процедура, преобразующая массив символов в число ; in:
 ;   dx -- адрес первого символа
 ;   cx -- количество символов
@@ -84,12 +83,12 @@ stoi:
 
     push 0
     jmp  stoil
-
+;
 stoiminus:
     inc  esi
     push 1
     jmp  stoil
-
+;
 stoil:
     mov dl, [esi]
     inc esi
@@ -105,28 +104,28 @@ stoil:
     pop  dx
     add  eax, edx
 
-    jmp stoil
-    
-    sub cx, 1
-    cmp cx, 0
+    sub ecx, 1
+    cmp ecx, 0
     je stoie
 
+    jmp stoil   
+;
 stoie:
     mov ecx, 0
     pop ecx
     cmp cl, 1
     je  stoiaddm
     jmp stoiend
-
+;
 stoiaddm:
     mov ecx, -1
     mul ecx
-
+    jmp stoiend
+;
 stoiend:
     pop ecx
     pop ebx
     pop edx
     pop esi
 
-    ret
- 
+    ret 

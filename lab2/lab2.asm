@@ -18,6 +18,9 @@ section .text
 global _start
 
 _start:
+    jmp getack   
+;
+getack:
     mov  eax, inl 
     mov  ecx, l
     mov  ebx, ia
@@ -35,11 +38,14 @@ _start:
     mov  ebx, ik
     mov  edx, k
     call geti
-
+    
     mov eax, [a]
     mov ebx, [c]
     mov ecx, [k]
-    
+
+    jmp calc
+;
+calc:
     push eax
     sub  eax, ebx
     mul  eax
@@ -60,7 +66,7 @@ _start:
     mul ecx
     add eax, 1
     mov ecx, eax
-   
+
     pop eax
     pop ebx
     mul ebx
@@ -70,6 +76,9 @@ _start:
     pop ecx
     add eax, ecx
     
+    jmp outandex
+;
+outandex:
     mov dword[a], eax 
 
     mov eax, a
@@ -79,10 +88,4 @@ _start:
 
     mov eax, 1
     int 80h
-
-
-
-
-
-
-
+;
