@@ -4,6 +4,7 @@
 ## Лабораторные работы
 
 01. [Отчет по лабораторной работе 1](https://github.com/pluttan/asmlearning/blob/master/lab1/lab1.pdf)
+02. [Отчет по лабораторной работе 2](https://github.com/pluttan/asmlearning/blob/master/lab2/lab2.pdf)
 
 ## Примеры
 Примеры сделаны на основе лекций OliveStem. Вот список всего, что есть.
