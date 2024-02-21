@@ -71,7 +71,7 @@ calc:
     pop ebx
     mul ebx
     cdq 
-    div ecx
+    idiv ecx
 
     pop ecx
     add eax, ecx
