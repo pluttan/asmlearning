@@ -329,3 +329,241 @@ $ f = (1 - (-13))^2 + 2 times 1 times (-13)^3/(5^2+1) = 14^2 + 2 times -2197/26 
 
 При выполнении деления перед умножением в результате мы получили бы $-84,5$, остаток отбросился и результат был бы неверен. 
 
+<<<<<<< HEAD
+=======
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/21.png", width: 90%),"Готовим отладчик"),
+  img(image("img/22.png", width: 90%),[Значения в регистрах])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/23.png", width: 90%), [```asm sub eax, ebx```]),
+  img(image("img/24.png", width: 90%),[```asm mul eax```])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/25.png", width: 90%),[Возвращаем `a`]),
+  img(image("img/26.png", width: 90%),[```asm mov edx, 2```])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/27.png", width: 90%),[```asm mul edx```]),
+  img(image("img/28.png", width: 90%),[```asm mov eax, ebx```])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/29.png", width: 90%),[```asm mul ebx```]),
+  img(image("img/30.png", width: 90%),[```asm mul ebx```])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/31.png", width: 90%),[```asm mov eax, ecx```]),
+  img(image("img/32.png", width: 90%),[```asm mul ecx```])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/33.png", width: 90%),[```asm add eax, 1```]),
+  img(image("img/34.png", width: 90%),[```asm mov ecx, eax```])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/35.png", width: 90%),[```asm pop eax```]),
+  img(image("img/36.png", width: 90%),[```asm pop ebx```])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/37.png", width: 90%),[```asm mul ebx```]),
+  img(image("img/38.png", width: 90%),[```asm cdq```])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/39.png", width: 90%),[```asm idiv ecx```]),
+  img(image("img/40.png", width: 90%),[```asm pop ecx```])
+)
+#img(image("img/41.png", width: 50%),[```asm add eax, ecx```],  f:(i)=>{i.display()})
+
+Выше приведен полный арифметический разбор всех операций, а в отладчике просто наглядно видно какие значения лежат в регистрах.
+
+Теперь напишем пару простых тестов, которые покажут правильность выполнения программы. Запускать их будем вызывая саму программу, не испозьзуя деббагер.
+
+$ a=1; c=13; k=5\ f = (1 - 13))^2 + 2 times 1 times 13^3/(5^2+1) = 12^2 + 2 times 2197/26 = \ = 144 + (4394)/26 = 144+169 = 313 $
+
+#img(image("img/72.png", width: 40%),[Тест 1],  f:(i)=>{i.display()})
+
+$ a=13; c=-13; k=25\ f = (13 - (-13))^2 + 2 times 13 times (-13)^3/(25^2+1) = 26^2 + 26 times -2197/626 = \ = 676 + (-57122)/626 = 676 - 91 = 585 $
+
+#img(image("img/73.png", width: 40%),[Тест 2],  f:(i)=>{i.display()})
+
+$ a=1; c=-1000; k=0\ f = (1 - (-1000))^2 + 2 times 1 times (-1000)^3/(0^2+1) = 1001^2 + 2 times (-1000000000) =\ =1002001 - 2000000000 = -1998997999 $
+
+#img(image("img/74.png", width: 40%),[Тест 3],  f:(i)=>{i.display()})
+
+=== Отладка вывода
+
+Мы получили ответ к задаче и осталось его только вывести.
+
+Так как адреса памяти все равно дают мало представнения о том, как процедура выполняется для ```asm reverse``` в основном приведу только значения, хранящиеся в памяти до и после.
+
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/42.png", width: 90%),[Переходим к ```asm outandex```]),
+  img(image("img/43.png", width: 90%),[Вызываем ```asm outi```])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/44.png", width: 90%),[Выводим строку перед числом]),
+  img(image("img/46.png", width: 90%),[Вызываем ```asm itos```])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/47.png", width: 90%),[Обрабатываем 1 цифру]),
+  img(image("img/48.png", width: 90%),[Обрабатываем 2 цифру])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/49.png", width: 90%),[Конец ```asm itos```]),
+  img(image("img/50.png", width: 90%),[Вызываем ```asm reverse```])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/51.png", width: 90%),[Входим в цикл]),
+  img(image("img/52.png", width: 90%),[Проверяем условие])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/53.png", width: 90%),[Память до цикла]),
+  img(image("img/54.png", width: 90%),[Память после цикла])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/55.png", width: 90%),[Завершаем ```asm itos```]),
+  img(image("img/56.png", width: 90%),[Готовим число к выводу])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/57.png", width: 90%),[Выведенный ответ]),
+  img(image("img/58.png", width: 90%),[Программа завершилась])
+)
+
+#pagebreak()
+=== Дизассемблирование кода и расшифоровка команд
+
+Запустим утилиту ```sh objdump```: ```sh objdump -d $mod```. Посмотрим на код в двочином (для удобства шеснадцатеричном) виде.
+
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/59.png", width: 90%),[```asm _start``` и ```asm getack```]),
+  img(image("img/60.png", width: 90%),[```asm calc```])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/61.png", width: 90%),[```asm outandex```]),
+  img(image("img/62.png", width: 88%),[```asm geti```])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/63.png", width: 90%),[```asm ctoi```, ```asm ctoie``` и ```asm stoi```]),
+  img(image("img/64.png", width: 90%),[```asm stoiminus```, ```asm stoil``` и ```asm stoie```])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/65.png", width: 90%),[```asm stoiaddm```, ```asm stoiend``` и ```asm outi```]),
+  img(image("img/66.png", width: 90%),[```asm itos```, ```asm itosminus``` и ```asm itosl```])
+)
+#grid(
+  columns:2,
+  gutter:10pt,
+  img(image("img/67.png", width: 90%),[```asm itose```, ```asm reverse``` и ```asm reverseminus```]),
+  img(image("img/68.png", width: 90%),[```asm reversel``` и ```asm reversee```])
+)
+
+Для разбора команды возьмем команду ```asm mov```.
+
+При компиляции языком ассемблера команда ```asm mov``` может быть заменена на множество команд: это зависит от операндов.
+
+Приведем таблицу команды ```asm mov```. Стоит отметить, что в данной таблице не указаны перемещения из/в системные (отладочные) регистры.
+
+#pagebreak()
+#table(
+  columns: 3,
+  inset: 10pt,
+  align: horizon,
+  [`89 /r`],   [`10001000 | modregr/m`], [```asm mov r/m8, r8```],
+  [`89 /r`],   [`10001001 | modregr/m`], [```asm mov r/m16, r16```],
+  [`89 /r`],   [`10001001 | modregr/m`], [```asm mov r/m32, r32```],
+  [`8A /r`],   [`10001010 | modregr/m`], [```asm mov r8, r/m8```],
+  [`8B /r`],   [`10001011 | modregr/m`], [```asm mov r16, r/m16```],
+  [`8B /r`],   [`10001011 | modregr/m`], [```asm mov r32, r/m32```],
+  [`8C /r`],   [`10001100 | mod0sregr/m`], [```asm mov r/m16(32), sreg```],
+  [`8E /r`],   [`10001110 | mod0sregr/m`], [```asm mov sreg, r/m16(32)```],
+  [`A0`],      [`10100000 | off_low8/16bit | off_high8/16bit`], [```asm mov al, moffs8```],
+  [`A1`],      [`10100001 | off_low8/16bit | off_high8/16bit`], [```asm mov ax, moffs16```],
+  [`A1`],      [`10100001 | off_low8/16bit | off_high8/16bit`], [```asm mov eax, moffs32```],
+  [`A2`],      [`10100010 | off_low8/16bit | off_high8/16bit`], [```asm mov r8, imm8```],
+  [`A3`],      [`10100011 | off_low8/16bit | off_high8/16bit`], [```asm mov r16, imm16```],
+  [`A3`],      [`10100011 | off_low8/16bit | off_high8/16bit`], [```asm mov r32, imm32```],
+  [`B0 + rb`], [`10110reg | data8bit `], [```asm mov r8, imm8```],
+  [`B8 + rw`], [`10111reg | data16bit`], [```asm mov r16, imm16```],
+  [`B8 + rd`], [`10111reg | data16bit`], [```asm mov r32, imm32```],
+  [`C6 /0`],   [`11000110 | mod000r/m`], [```asm mov r/m8, imm8```],
+  [`C7 /0`],   [`11000111 | mod000r/m`], [```asm mov r/m16, imm16```],
+  [`C7 /0`],   [`11000111 | mod000r/m`], [```asm mov r/m32, imm32```],
+)
+
+
+Для расшифровки возьмем 3 команды ```asm mov```. Перемещение адреса в регистр, перемещение регистра в регистр, перемещение в адрес, в указанный в регистре, значения другого регистра.
+
+==== Перемещение адреса в регистр
+#img(image("img/69.png", width: 70%),[```asm mov edx, k```],  f:(i)=>{i.display()})
+Адрес определяется в процессе копиляции, поэтому является константой. Формально для процессора мы перемещаем обычный длинный литерал. О том, что этот литерал -- адрес в оперативнй памяти помнит только программист.
+
+Выпишем шеснадцатеричный код и переведем его в двоичный:
+
+``` ba 3c a0 04 08 = 1011 1010  0011 1100 1010 0000 0000 0010 0000 0100= 
+= 10111 010 0111100101000000000001000000100```
+
+Эта команда подходит под шаблон `B8 + rd`, поэтому будем разбирать из него. Сама команда ```asm mov``` записана как `10111` потом идет регистр ```asm edx``` -- `010`. После записан `imm32` -- наш адрес.
+
+==== Перемещение из регистра в регистр
+
+#img(image("img/70.png", width: 70%),[```asm mov ecx, eax```],  f:(i)=>{i.display()})
+
+``` 89 с1  = 1000 1001  1100 0001 = 100010 01 11 000 001```
+
+Где `100010` -- код ассемблерной команды ```asm mov```. `01` -- первое число записи означент направление, в данном случае из регистра, второе указывают на то, что операнды 4-тырех байтовые. `11` -- указывает на то, что операнды - регистры. Далее идут номера самих регистров ```asm 000 = eax```, ```asm 001 = ecx```.
+
+==== Перемещение из регистра в адрес в регистре
+
+#img(image("img/71.png", width: 70%),[```asm mov [ebx], eax```],  f:(i)=>{i.display()})
+
+``` 89 03  = 1000 1001  0000 0011 = 100010 01 00 000 011```
+
+Где `100010` -- код ассемблерной команды ```asm mov```. `01` -- первое число записи означент направление, в данном случае из регистра, второе указывают на то, что операнды 4-тырех байтовые. `00` -- указывает на то, что смещение в команде 0 байт, это и отличает эту команду от предыдущей, т.к. теперь мы интерпритируем принимающий регистр как адрес в оперативной памяти, в который мы записываем ```asm eax``` без смещения. Далее идут номера самих регистров ```asm 000 = eax```, ```asm 011 = ebx```.
+
+== Вывод 
+
+В процессе выполнения лабораторной работы были созданы, отлажены и дизассемблированны библеотеки ввода-вывода на ассемблере. Были проделаны арифметические операции, использован стек и оперативная память. Все арифметические операции были так же отлажены и дизассемблированны. Был показан механизм определения команд ассемблера на основе двоичного кода.
+>>>>>>> 39c188c (add test lab2)
