@@ -13,10 +13,10 @@ section .bss
     b resb 12
     m resb 12
     l equ $-m
-
+;
 section .text
 global _start
-
+;
 _start:
     mov  eax, inl 
     mov  ecx, l
@@ -41,15 +41,14 @@ _start:
     cmp ecx, 0
     jl  f1
     jmp f2
-
+;
 f1:
     mov  eax, [a]
-    cmp  eax, 0
     add  eax, ebx
     cdq
     idiv ecx
     jmp  exit
-
+;
 f2:
     mov  eax, ebx
     imul ebx
@@ -59,7 +58,7 @@ f2:
     imul ecx
     add  eax, ebx
     jmp  exit
-
+;
 exit:
     mov dword[a], eax 
 
@@ -70,4 +69,4 @@ exit:
 
     mov eax, 1
     int 80h
-
+;
