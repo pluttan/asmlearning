@@ -4,7 +4,6 @@ extern outi
 section .data
     iarr  db  "Enter array: ", 10
     iarrl equ $-iarr
-    
     iarrn  db  "#1 #2 #3 #4 "
 
     ot1   db  "Max sum of pozitive numbers was in stroke #"
@@ -20,7 +19,7 @@ section .bss
 
 section .text
 global _start
-
+;
 _start:
     mov edi, 0
     jmp getarr
@@ -45,22 +44,21 @@ getarr:
     cmp ecx, [max]
     jge ecxmovmax
     jmp getarre
-
+;
 getarre:
     add edi, 1
     cmp edi, 4
     je  exit
     jmp getarr
-
-
+;
 ecxmovmax:
     mov dword[max],  ecx
     inc edi
     mov dword[maxi], edi
     sub edi, 1
     jmp getarre
-
-exit:   
+;
+exit:
     mov  eax, maxi
     mov  ecx, ot1
     mov  edx, ot1l
@@ -73,7 +71,7 @@ exit:
 
     mov eax, 1
     int 80h
-
+;
 ; Процедура, которая считает сумму положительных чисел в массиве
 ; In:
 ;   eax -- ссылка на массив
@@ -95,19 +93,18 @@ calcsum:
     add eax, ebx
     
     mov ecx, 0
-
-
+;
 calcsuml:
     sub eax, ebx
     mov edx, [eax]
     cmp edx, 0
     jg  calcsumlsum
     jmp calcsumle
-
+;
 calcsumlsum:
     add ecx, edx
     jmp calcsumle
-
+;
 calcsumle:
     add eax, ebx
 
@@ -116,7 +113,7 @@ calcsumle:
     jne calcsuml
 
     jmp calcsume
-
+;
 calcsume:
     pop eax
     pop ebx

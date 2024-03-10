@@ -96,7 +96,9 @@ getmas:
     add  ecx, edi
     mov  ebx, 0
 
-
+    jmp getmasl
+;
+;
 getmasl:
     call stoi
     sub  ecx, edi
@@ -108,8 +110,8 @@ getmasl:
     cmp  edi, 0
     jne  getmasl
     jmp  getmase
-
-
+;
+;
 getmase:
     pop ecx
     pop edx
@@ -119,9 +121,9 @@ getmase:
     pop esi
 
     ret
-
-
-
+;
+;
+;
 ; Процедура, преобразующая  символ в цифру
 ; in:
 ;   dl -- символ
