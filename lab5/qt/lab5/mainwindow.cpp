@@ -20,6 +20,7 @@ void MainWindow::on_pushButton_clicked()
     txs.push_back(96);
     char* tx = (char*)txs.data();
     parseasm(tx);
+    printstr(tx, 2);
 }
 void MainWindow::printstr(char* tx, int out){
     std::string txs;
