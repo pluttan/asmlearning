@@ -9,12 +9,12 @@ _ZN10MainWindow8parseasmEPc:
     push rbx
     push rcx
     jmp txparser
-
+;
 txparser:
     mov rcx, 0
     mov rdx, 0
     jmp txparserl
-
+;
 txparserl:
     mov bl, byte[rsi + rdx]
     inc rdx
@@ -36,12 +36,12 @@ txparserl:
     je  txparserl
 
     jmp txparserln
-
+;
 txparserln:
     mov byte[rsi+rcx], bl
     inc rcx
     jmp txparserl
-
+;
 txparsere:
     mov edx, ecx
     pop rcx
@@ -53,5 +53,4 @@ txparsere:
     pop rdx
 
     ret
-    
-
+;
