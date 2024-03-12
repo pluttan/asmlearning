@@ -30,18 +30,18 @@ _start:
     int 80h
     
     jmp txparser
-
+;
 txparser:
     mov ecx, 1
     mov esi, 0
     jmp txparserls
-
+;
 txparserls:
     sub ecx, 1
     lea edx, [tx+ecx]
     mov eax, 0
     jmp txparserl
-
+;
 txparserl:
     mov bl,  byte[tx+ecx]
     inc ecx
@@ -62,12 +62,12 @@ txparserl:
     je  txparserlcmpiax
 
     jmp txparserl
-
+;
 txparserlsp:
     cmp edx, 0
     jne txparserlpr
     jmp txparserl
-
+;
 txparserlpr:
     mov  [ota], eax
     push eax
@@ -111,17 +111,16 @@ txparserlpr:
     cmp esi, 0
     je  txparserl
     jmp txparseree
-
-
+;
 txparserlcmpiax:
     add eax, 1
     jmp txparserl    
-
+;
 txparsere:
     mov esi, 1
     jmp txparserlpr
-
+;
 txparseree:
     mov eax, 1
     int 80h
-
+;
