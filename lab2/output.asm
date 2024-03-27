@@ -57,7 +57,7 @@ itos:
 
     jmp  itosl
 ;
-itosminus:
+.itosminus:
     mov  byte[esi], '-'
     
     inc  esi
@@ -67,7 +67,7 @@ itosminus:
 
     jmp  itosl
 ;
-itosl:
+.itosl:
     mov edx, 0
     div ebx
     add edx, '0'
@@ -80,7 +80,7 @@ itosl:
 
     jmp itosl
 ;
-itose:
+.itose:
     pop edx
     pop ecx
     pop ebx
@@ -120,11 +120,11 @@ reverse:
 
     jmp reversel
 ; 
-reverseminus:
+.reverseminus:
     inc ebx
     jmp reversel
 ;
-reversel:
+.reversel:
     cmp ebx, edx
     jge reversee
 
@@ -138,7 +138,7 @@ reversel:
 
     jmp reversel
 ;
-reversee:
+.reversee:
     pop edx
     pop ecx
     pop ebx

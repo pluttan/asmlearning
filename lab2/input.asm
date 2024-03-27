@@ -58,7 +58,7 @@ ctoi:
     sub dl, '0'
     jmp ctoie
 ;
-ctoie:
+.ctoie:
     ret
 ;
 ; Процедура, преобразующая массив символов в число ; in:
@@ -84,12 +84,12 @@ stoi:
     push 0
     jmp  stoil
 ;
-stoiminus:
+.stoiminus:
     inc  esi
     push 1
     jmp  stoil
 ;
-stoil:
+.stoil:
     mov dl, [esi]
     inc esi
 
@@ -110,19 +110,19 @@ stoil:
 
     jmp stoil   
 ;
-stoie:
+.stoie:
     mov ecx, 0
     pop ecx
     cmp cl, 1
     je  stoiaddm
     jmp stoiend
 ;
-stoiaddm:
+.stoiaddm:
     mov ecx, -1
     mul ecx
     jmp stoiend
 ;
-stoiend:
+.stoiend:
     pop ecx
     pop ebx
     pop edx
