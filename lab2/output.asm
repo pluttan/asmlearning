@@ -53,9 +53,9 @@ itos:
     mov ebx, 10
 
     cmp eax, 0
-    jl  itosminus
+    jl  itos.itosminus
 
-    jmp  itosl
+    jmp  itos.itosl
 ;
 .itosminus:
     mov  byte[esi], '-'
@@ -65,7 +65,7 @@ itos:
     mov  ecx, -1
     mul  ecx
 
-    jmp  itosl
+    jmp  itos.itosl
 ;
 .itosl:
     mov edx, 0
@@ -76,9 +76,9 @@ itos:
     inc esi
 
     cmp eax, 0
-    je  itose
+    je  itos.itose
 
-    jmp itosl
+    jmp itos.itosl
 ;
 .itose:
     pop edx
@@ -116,17 +116,17 @@ reverse:
    
     mov al, [ebx]
     cmp al, '-'
-    je reverseminus
+    je reverse.reverseminus
 
-    jmp reversel
+    jmp reverse.reversel
 ; 
 .reverseminus:
     inc ebx
-    jmp reversel
+    jmp reverse.reversel
 ;
 .reversel:
     cmp ebx, edx
-    jge reversee
+    jge reverse.reversee
 
     mov al, [ebx]
     mov cl, [edx]
@@ -136,7 +136,7 @@ reverse:
     inc ebx
     sub edx, 1
 
-    jmp reversel
+    jmp reverse.reversel
 ;
 .reversee:
     pop edx

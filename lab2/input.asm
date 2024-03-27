@@ -50,13 +50,13 @@ geti:
 ;   dl -- цифра
 ctoi:
     cmp dl, '0'
-    jl ctoie
+    jl ctoi.ctoie
 
     cmp dl, '9'
-    jg ctoie
+    jg ctoi.ctoie
 
     sub dl, '0'
-    jmp ctoie
+    jmp ctoi.ctoie
 ;
 .ctoie:
     ret
@@ -79,22 +79,22 @@ stoi:
     
     mov dl, [esi]
     cmp dl, '-'
-    je  stoiminus
+    je  stoi.stoiminus
 
     push 0
-    jmp  stoil
+    jmp  stoi.stoil
 ;
 .stoiminus:
     inc  esi
     push 1
-    jmp  stoil
+    jmp  stoi.stoil
 ;
 .stoil:
     mov dl, [esi]
     inc esi
 
     cmp dl, 0x0a ; =LF
-    je  stoie
+    je  stoi.stoie
 
     call ctoi
 
@@ -106,21 +106,21 @@ stoi:
 
     sub ecx, 1
     cmp ecx, 0
-    je stoie
+    je stoi.stoie
 
-    jmp stoil   
+    jmp stoi.stoil   
 ;
 .stoie:
     mov ecx, 0
     pop ecx
     cmp cl, 1
-    je  stoiaddm
-    jmp stoiend
+    je  stoi.stoiaddm
+    jmp stoi.stoiend
 ;
 .stoiaddm:
     mov ecx, -1
     mul ecx
-    jmp stoiend
+    jmp stoi.stoiend
 ;
 .stoiend:
     pop ecx
