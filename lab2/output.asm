@@ -8,11 +8,12 @@ global itos
 ; Out:
 ;   Вывод числа
 outi:
+    push edi
     push ebx
     push edx
     push ecx
     push eax
-
+    
     mov eax, 4      ; Пишем приглашение на вывод
     mov ebx, 1
     int 80h
@@ -26,12 +27,15 @@ outi:
     mov  eax, 4     ; Вывод
     mov  ebx, 1 
     int  80h
-    
+
+    mov  dword[ecx], edi
+
     pop eax
     pop ecx
     pop edx
     pop ebx
-
+    pop edi
+    
     ret
 ;
 ; Процедура, преобразующая число в массив символов
@@ -49,6 +53,7 @@ itos:
 
     mov esi, ebx
     mov eax, [esi]
+    mov edi, eax
 
     mov ebx, 10
 
