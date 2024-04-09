@@ -2,14 +2,14 @@ extern outi
 
 section .data
 
-    matrix dd 4, 2, 72, 3, 1, 4, 2, 2, 100, 5, 25, 625, 25, 5, 1, 10, 99, 50, 26, 35, 7, 14, 100, 100
+    matrix dd 4, 2, 72, 3, 1, 4, 2, 2,   100, 5, 25, 625, 25, 5, 1, 10,     99, 50, 26, 35, 7, 14, 100, 100
 
-    strokematrix    db "строка матрицы "
+    strokematrix    db "Cтрока матрицы "
     lenstrokematrix equ $-strokematrix
 
     outsymv db "#:/="
 
-    st    db "stroke #"
+    st    db "Stroke #"
     lenstr equ $-st
 
     ndstr    db " and #"
@@ -36,27 +36,29 @@ cycle:
     jmp cycle2
 
 cycle2:
+    call mul4 
     mov eax, dword[matrix + ecx]
     
-    call mul4 
     neg  ecx
-    add  ecx, 28 
+    add  ecx, edi
     mov  ebx, dword[matrix + ecx]
-    sub  ecx, 28
+    sub  ecx, edi
     neg  ecx
 
     cdq
     idiv ebx
+    sub  edi, 28
+    shr  edi, 1
+    sub  ecx, edi
     mov  dword[buf + ecx], eax
-
     push ecx
     call div4
-    push ecx
     inc  ecx
 
     mov  dword[sysbuf], ecx
     lea  eax, [sysbuf]
     mov  edx, 1
+    push ecx
     lea  ecx, [outsymv]
     call outi
     
@@ -76,6 +78,7 @@ cycle2:
     pop  ecx
     pop  edx
     sub  ecx, 1
+    push ecx
     lea  eax, [buf + edx]
     lea  ecx, [outsymv + 3]
     mov  edx, 1
@@ -96,8 +99,8 @@ cycle2:
 
 .cycleeq:
     pop  edx
-    add  edx, 4
     mov  eax, dword[buf + edx]
+    add  edx, 4
     push edx
     mov  edx, 0
     mov  edi, 0
@@ -107,7 +110,9 @@ cycle2:
     cmp edi, ecx
     jg  cycle2.cycleeqtrue
     add edx, 4
-    inc edi
+    inc edi 
+    cmp edx, 16
+    je  cycle2.cycleeq2end
     jmp cycle2.cycleeq2
 
 .cycleeqtrue:
@@ -127,14 +132,18 @@ cycle2:
     push eax
     push ecx
     push edx
-
+    
+    inc  ecx
     mov  dword[sysbuf], ecx
+    dec  ecx
     lea  eax, [sysbuf]
     lea  ecx, [st]
     mov  edx, lenstr
     call outi
 
+    inc  edi
     mov  dword[sysbuf], edi
+    dec  edi
     lea  ecx, [ndstr]
     mov  edx, lenndstr
     call outi
@@ -148,7 +157,8 @@ cycle2:
     pop edx
     pop ecx
     pop eax
-
+    
+    inc edi
     add edx, 4
     cmp edx, 16
     je  cycle2.cycleeq2end
@@ -174,7 +184,9 @@ endprog:
     int 80h
 
 printstroke:
+    inc esi
     mov dword[sysbuf], esi
+    dec esi
     lea eax, [sysbuf]
     lea ecx, [strokematrix]
     mov edx, lenstrokematrix
@@ -211,6 +223,13 @@ mul4:
     mov  ecx, 4
     imul ecx
     mov  ecx, eax
+    mov  eax, esi
+    mov  edx, 32
+    imul edx
+    add  ecx, eax
+    mov  edi, eax
+    shl  edi, 1
+    add  edi, 28
     pop  edx
     pop  eax
     ret
