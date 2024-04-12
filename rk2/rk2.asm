@@ -1,8 +1,11 @@
 extern outi
 
 section .data
-
-    matrix dd 4, 2, 72, 3, 1, 4, 2, 2,   100, 5, 25, 625, 25, 5, 1, 10,     99, 50, 26, 35, 7, 14, 100, 100
+    
+    ;   4   2   72  3   1   4   2   2
+    ;   100 5   25  625 25  5   1   10
+    ;   99  50  26  35  7   14  100 100
+    matrix dd 4, 2, 72, 3, 1, 4, 2, 2,   100, 5, 25, 625, 25, 5, 1, 10,     99, 50, 26, 35, 7, 14, 0, 100
 
     strokematrix    db "Cтрока матрицы "
     lenstrokematrix equ $-strokematrix
@@ -36,12 +39,20 @@ cycle:
     jmp cycle2
 
 cycle2:
-    call mul4 
+    shl  ecx, 2
+    mov  edi, esi
+    shl  edi, 5
+    add  ecx, edi
+    shl  edi, 1
+    add  edi, 28
+
     mov eax, dword[matrix + ecx]
     
     neg  ecx
     add  ecx, edi
     mov  ebx, dword[matrix + ecx]
+    cmp  ebx, 0         ; Обработка деления на 0, не обязательно
+    je   exitwitherror  ; 
     sub  ecx, edi
     neg  ecx
 
@@ -52,7 +63,7 @@ cycle2:
     sub  ecx, edi
     mov  dword[buf + ecx], eax
     push ecx
-    call div4
+    shr  ecx, 2
     inc  ecx
 
     mov  dword[sysbuf], ecx
@@ -94,36 +105,33 @@ cycle2:
 
 .end:
     mov  ecx, 0
-    push ecx
     jmp  cycle2.cycleeq
 
 .cycleeq:
-    pop  edx
-    mov  eax, dword[buf + edx]
-    add  edx, 4
-    push edx
+    mov  eax, ecx
+    shl  eax, 2
+    mov  eax, dword[buf + eax]
     mov  edx, 0
-    mov  edi, 0
     jmp  cycle2.cycleeq2
 
 .cycleeq2:
-    cmp edi, ecx
+    cmp edx, ecx
     jg  cycle2.cycleeqtrue
-    add edx, 4
-    inc edi 
-    cmp edx, 16
+    inc edx
+    cmp edx, 4
     je  cycle2.cycleeq2end
     jmp cycle2.cycleeq2
 
 .cycleeqtrue:
+    shl edx, 2
     mov ebx, dword[buf + edx]
+    shr edx, 2
 
     cmp eax, ebx
     je  cycle2.cycleeqprint
     
-    add edx, 4
-    inc edi
-    cmp edx, 16
+    inc edx
+    cmp edx, 4
     je  cycle2.cycleeq2end
 
     jmp cycle2.cycleeq2
@@ -132,18 +140,18 @@ cycle2:
     push eax
     push ecx
     push edx
-    
-    inc  ecx
+
+    inc  ecx ; Для одинаковой нумерации строк
     mov  dword[sysbuf], ecx
-    dec  ecx
     lea  eax, [sysbuf]
     lea  ecx, [st]
     mov  edx, lenstr
     call outi
 
-    inc  edi
-    mov  dword[sysbuf], edi
-    dec  edi
+    pop  ecx
+    push ecx
+    inc  ecx ; Для одинаковой нумерации строк
+    mov  dword[sysbuf], ecx
     lea  ecx, [ndstr]
     mov  edx, lenndstr
     call outi
@@ -158,9 +166,8 @@ cycle2:
     pop ecx
     pop eax
     
-    inc edi
-    add edx, 4
-    cmp edx, 16
+    inc edx
+    cmp edx, 4
     je  cycle2.cycleeq2end
 
     jmp cycle2.cycleeq2
@@ -172,7 +179,6 @@ cycle2:
     jmp cycle2.cycleeq
 
 .cycleeqend:
-    pop ecx
     inc esi
     cmp esi, 3
     je  endprog
@@ -184,12 +190,12 @@ endprog:
     int 80h
 
 printstroke:
-    inc esi
-    mov dword[sysbuf], esi
-    dec esi
-    lea eax, [sysbuf]
-    lea ecx, [strokematrix]
-    mov edx, lenstrokematrix
+    inc  esi ; для более красивого вывода, не обязательно
+    mov  dword[sysbuf], esi
+    dec  esi ; для более красивого вывода, не обязательно
+    lea  eax, [sysbuf]
+    lea  ecx, [strokematrix]
+    mov  edx, lenstrokematrix
     call outi
     
     call print10
@@ -216,32 +222,16 @@ print10:
 
     ret
 
-mul4:
-    push eax
-    push edx
-    mov  eax, ecx
-    mov  ecx, 4
-    imul ecx
-    mov  ecx, eax
-    mov  eax, esi
-    mov  edx, 32
-    imul edx
-    add  ecx, eax
-    mov  edi, eax
-    shl  edi, 1
-    add  edi, 28
-    pop  edx
-    pop  eax
-    ret
+exitwitherror: ; Обработка исключения: деление на 0, не обязательно
+    mov dword[buf],   "ERR:" 
+    mov dword[buf+4], "div "
+    mov byte[buf+8], "0"
+    mov byte[buf+9], 10
+    mov eax, 4
+    mov ebx, 1
+    lea ecx, [buf]
+    mov edx, 12
+    int 80h
 
-div4:
-    push eax
-    push edx
-    mov  eax, ecx
-    mov  ecx, 4
-    cdq
-    idiv ecx
-    mov  ecx, eax
-    pop  edx
-    pop  eax
-    ret
+    mov eax, 1 ; Выход с ошибкой 1
+    int 80h
