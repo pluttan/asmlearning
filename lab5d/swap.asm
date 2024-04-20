@@ -1,18 +1,21 @@
 section .data
-st db "Hello world i wannt to be swapped"
+st db "Hello123456789 world nice to meet you", 10
 stl equ $-st
+
+section .bss
+resb 255
 
 section .text
 global _start
 
 _start:
-    mov  eax, 6
-    mov  ebx, 14
+    mov  eax, 0
+    mov  ebx, 21
     lea  ecx, [st]
     call swap
     mov eax, 4
     mov ebx, 1
-    mov edx, stl
+    mov edx, 100
     int 80h
     mov eax, 1
     int 80h
@@ -20,44 +23,99 @@ _start:
 swap:
     push eax
     push ebx
-    push ecx
     push edx
     push esi
     push edi
+    push ecx
+    
+    add  eax, ecx
+    add  ebx, ecx
 
-    add  ecx, ebx
+    mov  ecx, ebx
     call len
-    sub  ecx, ebx
     mov  esi, edi
 
-    add  ecx, eax 
+    mov  ecx, eax 
     call len
-    sub  ebx, eax
 
     cmp edi, esi
     je  swap.eq 
+    jl  swap.ls
+    jg  swap.gr
 
 .eq:
-    mov dl, byte[ecx + edi - esi]
-    mov dh, byte[ecx + edi - esi + ebx]
-    mov byte[ecx + edi - esi], dl
-    mov byte[ecx + edi - esi + ebx], dh
+    mov esi, 0
+    jmp swap.eql
 
-    dec esi
-    cmp esi, 0
-    jne swap.eq
+.eql:
+    mov dl, byte[eax + esi]
+    mov dh, byte[ebx + esi]
+    mov byte[ebx + esi], dl
+    mov byte[eax + esi], dh
+
+    inc esi
+    cmp esi, edi
+    jne swap.eql
     jmp swap.e
 
+.ls:
+    mov eax, 1
+    mov ebx, 1
+    int 80h
+
+.gr:
+    mov  edx, stl
+    add  edx, eax
+    pop  ecx
+    push ecx
+    sub  edx, ecx
+
+    mov  ecx, ebx
+    add  ecx, esi
+    dec  ecx
+
+    push ebx
+    mov  ebx, edi
+    sub  ebx, esi
+
+    call exbuf
+    pop  ebx
+
+    jmp  swap.e
+
 .e:
+    pop ecx
     pop edi
     pop esi
     pop edx
-    pop ecx
     pop ebx
     pop eax
     ret
-    
 
+; ebx - len
+; ecx - buf
+; edx - size
+exbuf:
+    push eax
+    push ecx
+    push edx
+    add  ecx, edx
+    jmp exbuf.l
+
+.l:
+    mov al, byte[ecx]
+    mov byte[ecx + ebx], al
+    dec ecx
+    dec edx
+    cmp edx, 0
+    je  exbuf.e
+    jmp exbuf.l
+
+.e:
+    pop edx
+    pop ecx
+    pop eax
+    ret
 
 ;ecx - begin of word
 len:
