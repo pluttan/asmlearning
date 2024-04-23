@@ -59,7 +59,7 @@ getArray:
     shl ecx, 2
     add ebx, ecx
     shr ecx, 2
-    mov dword[arrout], 9999999
+    mov dword [arrout + ebx], eax
 
     inc  ecx
     add  esi, 24
@@ -102,7 +102,9 @@ print:
 
 .loop2:
     shl ebx, 2
-    lea eax, [arrout + ebx + esi]
+    mov eax, [arrout + ebx + esi]
+    mov [arrin], eax
+    lea eax, [arrin]
     shr ebx, 2
     mov byte[bufofstr], " "
     lea ecx, [bufofstr]
