@@ -2,8 +2,8 @@
 ; 34, " occurs "
 ; " times in the line", 10
 section .data
-    pat1 db "abc abc cab"
-    pat2 db "ab cab"
+    pat1 db "qwerty wertyui", 0
+    pat2 db "qwe we w", 0
 
 section .bss
     buf resb 255
@@ -17,13 +17,20 @@ _start:
     mov  r10, buf
     call fif
 
-    mov  rax, 4
-    mov  rbx, 1
-    lea  rcx, [buf]
+    mov  rax, 1
+    mov  rdi, 1
+    lea  rsi, [buf]
     mov  rdx, 255
+    syscall
 
-    mov rax, 1
-    int 80h
+    mov  rax, 1
+    mov  rdi, 1
+    lea  rsi, [pat1]
+    mov  rdx, 9
+    syscall
+
+    mov rax, 60
+    syscall
 
 ; берем 1 букву пробегаем по всему pat2 если нашли такую букву берем вторую и чекаем есть ли совпадение если совпадение есть, то берем букву дальше и так далее пока совпадения не будет, если адреса разные то кидаем это как ответ. Ответ организовывается в виде 2 чисел: начало в первой строке и длина
 
@@ -38,8 +45,6 @@ fif:
     push r9
     push r10
     push r11
-    push r12
-    push r13
     
     mov rax, rsi
 
@@ -70,11 +75,13 @@ fif:
     jmp fif.loop2
 
 .loop2:
-    mov r12, [rsi + rcx]
-    mov r13, [rdx + rbx]
-    cmp r12, r13
-    je  fif.findfirstchar
-    jmp fif.loop2e
+    push rax
+    mov  al, [rsi + rcx]
+    mov  ah, [rdx + rbx]
+    cmp  al, ah
+    pop  rax
+    je   fif.findfirstchar
+    jmp  fif.loop2e
 
 .findfirstchar:
     mov rdi, rcx
@@ -92,14 +99,20 @@ fif:
     jmp fif.loop3e
 
 .loop3b3:
-    mov r12, [rsi + rdi]
-    mov r13, [rdx + rax]
-    cmp r12, r13
-    je  fif.loop3b4
+    push rbx
+    mov  bl, [rsi + rdi]
+    mov  bh, [rdx + rax]
+    cmp  bl, bh
+    je   fif.loop3b4
+    jmp  fif.loop3b3e
+
+.loop3b3e:
+    pop rbx
     jmp fif.loop3e
 
 .loop3b4:
-    cmp r12, " "
+    cmp bh, " "
+    pop rbx
     jne fif.loop3
     jmp fif.loop3e
 
@@ -124,17 +137,19 @@ fif:
     jmp fif.loop4
 
 .loop4:
-    mov r12, [rsi + rcx]
-    mov [r10 + r11], r12
-    inc r11
-    inc rcx
-    cmp rdi, rcx
-    jg  fif.loop4
-    jmp fif.findpate
+    push rax
+    mov  al, [rsi + rcx]
+    mov  byte[r10 + r11], al
+    pop  rax
+    inc  r11
+    inc  rcx
+    cmp  rdi, rcx
+    jg   fif.loop4
+    jmp  fif.findpate
 
 .findpate: 
     pop rcx
-    mov [r10 + r11], 10
+    mov byte[r10 + r11], 10
     inc r11
     jmp fif.loop2e
 
@@ -151,8 +166,6 @@ fif:
     jmp fif.end
 
 .end:
-    pop r13   
-    pop r12
     pop r11
     pop r10
     pop r9
@@ -176,7 +189,7 @@ len:
 .l:
     mov al, [rsi + r8]
     cmp al, 0
-    je  end
+    je  len.e
     inc r8
     jmp len.l
 
