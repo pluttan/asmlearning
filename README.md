@@ -12,6 +12,7 @@
 ## Домашние работы
 
 01. [Отчет по домашней работе 1 (без команд для цепочек)](https://github.com/pluttan/asmlearning/blob/master/dz1/dz1.pdf)
+01. [Отчет по домашней работе 2 ](https://github.com/pluttan/asmlearning/blob/master/dz2/dz2.pdf)
 
 ## Примеры
 Примеры сделаны на основе лекций OliveStem. Вот список всего, что есть.
